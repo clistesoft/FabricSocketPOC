@@ -15,7 +15,6 @@ export class FabricComponent implements OnInit {
   // @ViewChild('mycanvas', {static: true}) mycanvas: ElementRef;
 
   ngOnInit(): void {
-    console.log('mycanvas', this.mycanvas)
     this.canvas = new fabric.Canvas('canvas', {
       hoverCursor: 'hand',
       selection: true,
