@@ -1,9 +1,9 @@
 <p>fabric comp works!</p>
-<!-- <canvas #mycanvas  style="border: 1px solid red;" width="600" height="500"></canvas> -->
+<!-- <canvas (drop)="handleDrop($event)" #mycanvas  style="border: 1px solid red;" width="600" height="500"></canvas> -->
 <div
   (dragover)="false"
   (dragend)="false"
-  (drop)="handleDrop($event)">
+  >
   <canvas id="canvas" style="border: 1px solid red;" width="600" height="500">
   </canvas>
 </div>

@@ -3,17 +3,29 @@
 </header>
 <div class="container-fluid">
 
-<form >
+  <div *ngIf="currentUser == null"> 
+  <form (ngSubmit)="onSubmit()" #userForm="ngForm">
     <div class="form-group m-2 row">
       <label for="inputUser" class="col-auto col-form-label">User Name</label>
       <div class="col">
-        <input type="text" class="form-control" id="inputUser">
+        <input type="text" class="form-control" id="name"
+               required
+               [(ngModel)]="model.name" name="name"
+               #name="ngModel">
+        <div [hidden]="name.valid || name.pristine"
+             class="alert alert-danger">
+          Name is required
+        </div>
       </div>
-      <div class="col">  <button type="submit" class="btn btn-primary mb-2">Login</button>
+      <div class="col"> 
+        <button type="submit" class="btn btn-primary" [disabled]="!userForm.form.valid">Login</button>
       </div>
     </div>
 </form>
-
-<app-fabric></app-fabric>
-<router-outlet></router-outlet>
+</div>
+<div *ngIf="currentUser">
+<div >You are loggedin as {{currentUser.name}}</div>
+<app-fabric ></app-fabric>
+</div>
+<!-- <router-outlet></router-outlet> -->
 </div>
