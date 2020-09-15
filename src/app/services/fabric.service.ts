@@ -7,12 +7,17 @@ import { User } from '../user';
 })
 export class FabricService {
   currentUser = this.socket.fromEvent<User>('user');
+  activeUsers = this.socket.fromEvent<any>('users');
 
   constructor(private socket: Socket) { }
   
-  newUser() {
-    this.socket.emit('addUser', { id: this.rndmUserId(), canvasData: '' });
+  newUser(value) {
+    console.log('service newUser ',value)
+    this.socket.emit('setUser', value);
   }
+  // activeUsers(){
+  //   this.socket.emit('setUser', value);
+  // }
 
   private rndmUserId() {
     let text = '';

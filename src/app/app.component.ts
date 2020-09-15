@@ -1,5 +1,5 @@
 import { FabricService } from './services/fabric.service';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 // import {fabric} from './components/fabric/fabric.component';
@@ -12,6 +12,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 })
 export class AppComponent implements OnInit, OnDestroy {
   currentUser: User;
+  activeUsers: Observable<string[]>;
   private _userSub: Subscription;
 // export class AppComponent {
   title = 'fabric-socketPOC';
@@ -22,22 +23,23 @@ export class AppComponent implements OnInit, OnDestroy {
 
 
   ngOnInit() {
-    this._userSub = this.fabricService.currentUser.pipe(
-      // startWith({ id: '', canvasData: 'Select an existing canvas'})
-    ).subscribe(currentUser => this.currentUser = currentUser);
+    // this.activeUsers = this.fabricService.activeUsers.pipe().subscribe();
+this._userSub = this.fabricService.activeUsers.pipe().subscribe(activeUsers => this.activeUsers = activeUsers);
+    // this._userSub = this.fabricService.currentUser.pipe(
+    //   // startWith({ id: '', canvasData: 'Select an existing canvas'})
+    // ).subscribe(currentUser => this.currentUser = currentUser);
+    console.log('ngOnInit', this.activeUsers)
   }
 
   ngOnDestroy() {
     this._userSub.unsubscribe();
   }
 
-
   onSubmit() { 
     this.submitted = true; 
-    // this.fabricService.newUser()
     this.currentUser = { id:this.model.id, name: this.model.name };
-    console.log(this.model, this.currentUser )
-
+    this.fabricService.newUser(this.model.name);
+    // console.log(this.model, this.currentUser )
   }
  
 }

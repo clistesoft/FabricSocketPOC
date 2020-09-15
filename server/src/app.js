@@ -2,34 +2,74 @@ const app = require('express')();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 
-const documents = {};
+const users = [];
+
+const getUserById = function (id) {
+    return users.find(item => item.id === id);
+    // for (const i = 0; i < users.length; i++) {
+    //     if (users[i].id === id)
+    //         return users[i];
+    // }
+    // return undefined;
+
+};
+
+const getUserIndexById = function(id) {
+    
+    return users.findIndex(item => item.id === id);
+
+    // for (const i = 0; i < users.length; i++) {
+    //     if (users[i].id === id)
+    //         return i;
+    // }
+    // return -1;
+};
 
 io.on('connection', socket => {
-    let previousId;
-    const safeJoin = currentId => {
-        socket.leave(previousId);
-        socket.join(currentId, () => console.log(`Socket ${socket.id} joined room ${currentId}`));
-        previousId = currentId;
-    }
+    var user = getUserById(socket.id);
 
-    socket.on('getDoc', docId => {
-        safeJoin(docId);
-        socket.emit('document', documents[docId]);
+    if (typeof user === 'undefined')
+    users.push({id: socket.id, name: ''});
+
+    io.sockets.emit('users', users);
+
+    socket.on('disconnect', function() {
+        var index = getUserIndexById(socket.id);
+        console.log(`Socket ${socket.id} disconnect`, index);
+        if (index > -1)
+            users.splice(index, 1);
+        
+        socket.broadcast.emit('users', users);
+
+    });
+    socket.on('object:modifying', function (value) {
+            
+        //send object:modifying to everyone except the sender
+        socket.broadcast.emit('object:modifying', value);
+
+    });
+    
+    socket.on('object:stoppedModifying', function (value) {
+
+        //send object:stoppedModifying to everyone except the sender
+        socket.broadcast.emit('object:stoppedModifying', value);
+
     });
 
-    socket.on('addDoc', doc => {
-        documents[doc.id] = doc;
-        safeJoin(doc.id);
-        io.emit('documents', Object.keys(documents));
-        socket.emit('document', doc);
+    socket.on('addRectangle', function (value) {
+
+        //send object:stoppedModifying to everyone except the sender
+        socket.broadcast.emit('addRectangle', value);
+
     });
 
-    socket.on('editDoc', doc => {
-        documents[doc.id] = doc;
-        socket.to(doc.id).emit('document', doc);
+    socket.on('setUser', function (value) {
+        var user = getUserById(socket.id);
+        if (typeof user !== 'undefined')
+            user.name = value;
+        
+        io.sockets.emit('users', users);
     });
-
-    io.emit('documents', Object.keys(documents));
 
     console.log(`Socket ${socket.id} has connected`);
 });

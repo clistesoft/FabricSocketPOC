@@ -24,8 +24,24 @@
 </form>
 </div>
 <div *ngIf="currentUser">
-<div >You are loggedin as {{currentUser.name}}</div>
-<app-fabric ></app-fabric>
+  <div class="alert alert-success" role="alert">
+    You are loggedin as <strong>{{currentUser.name}}</strong>!
+  </div>
+ 
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-auto" style="width: 200px;">
+      <h4>Active Users</h4>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item" *ngFor="let item of activeUsers">{{item.name}}</li>
+      </ul>
+    </div>
+    <div class="col">
+      <app-fabric ></app-fabric>
+    </div>
+</div>
+
+
 </div>
 <!-- <router-outlet></router-outlet> -->
 </div>
