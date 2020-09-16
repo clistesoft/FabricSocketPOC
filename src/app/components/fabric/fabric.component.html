@@ -11,10 +11,10 @@
   
   <br/>  <br/>
  
-  <ng-container *ngIf="objModifying">
-    <div class="badge badge-danger"
-    [ngStyle]="{'left': objModifying.left +'px', 'top':objModifying.top+'px'}"
-    style="position: absolute; z-index: 99; " >{{objModifying.username}}</div>
+  <ng-container *ngIf="currentUsertag">
+    <div class="badge"
+    [ngStyle]="{'left': objModifying.left +'px', 'top':objModifying.top+'px', 'background': currentUsertag.color}"
+    style="position: absolute; z-index: 99; " >{{currentUsertag.name}} is moving object</div>
   </ng-container>
-  
-</div> 
+ 
+ </div>  

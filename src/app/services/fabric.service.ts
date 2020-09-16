@@ -15,7 +15,7 @@ export class FabricService {
   constructor(private socket: Socket) { }
   
   newUser(value) {
-    console.log('service newUser ',value)
+    // console.log('service newUser ',value)
     this.socket.emit('setUser', value);
   }
 

@@ -37,7 +37,7 @@ io.on('connection', socket => {
 
     socket.on('disconnect', function() {
         var index = getUserIndexById(socket.id);
-        console.log(`Socket ${socket.id} disconnect`, index);
+        // console.log(`Socket ${socket.id} disconnect`, index);
         if (index > -1)
             users.splice(index, 1);
         
@@ -68,13 +68,16 @@ io.on('connection', socket => {
 
     socket.on('setUser', function (value) {
         var user = getUserById(socket.id);
-        if (typeof user !== 'undefined')
-            user.name = value;
+        if (typeof user !== 'undefined'){
+            user.name = value.name;
+            user.color = value.color;
+        }
+            
         
         io.sockets.emit('users', users);
     });
 
-    console.log(`Socket ${socket.id} has connected`);
+    // console.log(`Socket ${socket.id} has connected`);
 });
 
 http.listen(4444, () => {
