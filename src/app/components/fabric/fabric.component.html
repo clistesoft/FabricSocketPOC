@@ -3,7 +3,18 @@
 <div
   (dragover)="false"
   (dragend)="false"
+  style="position: relative; border: 1px dotted blue;"
   >
   <canvas id="canvas" style="border: 1px solid red;" width="600" height="500">
   </canvas>
-</div>
+
+  
+  <br/>  <br/>
+ 
+  <ng-container *ngIf="objModifying">
+    <div class="badge badge-danger"
+    [ngStyle]="{'left': objModifying.left +'px', 'top':objModifying.top+'px'}"
+    style="position: absolute; z-index: 99; " >{{objModifying.username}}</div>
+  </ng-container>
+  
+</div> 

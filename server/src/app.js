@@ -3,6 +3,7 @@ const http = require('http').Server(app);
 const io = require('socket.io')(http);
 
 const users = [];
+const objectModifying = { }
 
 const getUserById = function (id) {
     return users.find(item => item.id === id);
@@ -27,6 +28,7 @@ const getUserIndexById = function(id) {
 
 io.on('connection', socket => {
     var user = getUserById(socket.id);
+    // var objectModifying = getModifyingObj();
 
     if (typeof user === 'undefined')
     users.push({id: socket.id, name: ''});
@@ -39,27 +41,28 @@ io.on('connection', socket => {
         if (index > -1)
             users.splice(index, 1);
         
-        socket.broadcast.emit('users', users);
+        socket.emit('users', users);
 
     });
     socket.on('object:modifying', function (value) {
-            
+            // console.log('object:modifying',this.user)
         //send object:modifying to everyone except the sender
-        socket.broadcast.emit('object:modifying', value);
-
+        socket.emit('object:modifying', value);
+        io.sockets.emit('objectModifying', value);
     });
     
     socket.on('object:stoppedModifying', function (value) {
 
         //send object:stoppedModifying to everyone except the sender
-        socket.broadcast.emit('object:stoppedModifying', value);
-
+        socket.emit('object:stoppedModifying', value);
+        // io.sockets.emit('objectModifying', objectModifying);
+        io.sockets.emit('objectModifying', value);
     });
 
     socket.on('addRectangle', function (value) {
 
         //send object:stoppedModifying to everyone except the sender
-        socket.broadcast.emit('addRectangle', value);
+        socket.emit('addRectangle', value);
 
     });
 
